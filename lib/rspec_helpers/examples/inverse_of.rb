@@ -23,15 +23,13 @@ RSpec.shared_examples 'inverse of association' do |excluded|
     it relation.name.to_s do
       expect(relation.options[:inverse_of]).to_not be nil
 
-      # if relation.options[:through]
-      #   expect(relation.options[:inverse_of]).to eq(
-      #     described_class.name.pluralize.underscore.to_sym
-      #   )
-      # else
-      #   expect(relation.options[:inverse_of]).to eq(
-      #     described_class.name.underscore.to_sym
-      #   )
-      # end
+      if relation.options[:through]
+        expect(relation.options[:inverse_of]).to eq(
+          described_class.name.pluralize.underscore.to_sym)
+      else
+        expect(relation.options[:inverse_of]).to eq(
+          described_class.name.underscore.to_sym)
+      end
     end
   end
 end
