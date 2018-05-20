@@ -10,7 +10,7 @@ RSpec.shared_examples 'CRUD Controller create' do
     it 'Should create resource' do
       attrs = build(model_name).attributes
 
-      post :create, params: { model_name.to_s => attrs }
+      post :create, params: { "#{model_name}" => attrs }
       res = js_res[:data]
       columns.each do |c|
         expect(res.key?(c.to_sym)).to be true
@@ -23,13 +23,15 @@ RSpec.shared_examples 'CRUD Controller create' do
         attrs = build(model_name).attributes
         attrs[column.to_s] = nil
 
-        post :create, params: { model_name.to_s => attrs }
+        post :create, params: { "#{model_name}" => attrs}
 
-        presence = validator.is_a? ActiveRecord::Validations::PresenceValidator
-        raise 'unkown validator' unless presence
-        expect(
-          js_res[:errors][column.to_sym]
-        ).to include I18n.t('errors.messages.blank')
+        if validator.is_a? ActiveRecord::Validations::PresenceValidator
+          expect(
+            js_res[:errors][column.to_sym]
+          ).to include I18n.t('errors.messages.blank')
+        else
+          raise 'unkown validator'
+        end
       end
     end
   end

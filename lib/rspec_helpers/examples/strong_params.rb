@@ -10,7 +10,7 @@ RSpec.shared_examples 'strong params' do |relations, excluded|
   devise_attrs.each { |k| column_names.delete(k) }
   excluded.each { |k| column_names.delete(k) }
 
-  attach_columns.each do |a|
+  RspecHelpers.attach_columns.each do |a|
     column_names.each do |c|
       column_names.delete(c) if c.end_with? a
     end
@@ -92,21 +92,4 @@ RSpec.shared_examples 'strong params' do |relations, excluded|
       end
     end
   end
-end
-
-def devise_attrs
-  %w[
-    encrypted_password reset_password_token reset_password_sent_at
-    remember_created_at sign_in_count current_sign_in_at last_sign_in_at
-    current_sign_in_ip last_sign_in_ip failed_attempts unlock_token
-    locked_at auth_token
-  ]
-end
-
-def attach_columns
-  %w[
-    _content_type
-    _file_size
-    _updated_at
-  ]
 end
