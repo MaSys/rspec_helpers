@@ -4,6 +4,8 @@ RSpec.shared_examples 'has_many relations' do |excluded_columns, excluded_tables
   excluded_tables = [excluded_tables] unless excluded_tables.is_a? Array
   excluded_tables << 'schema_migrations'
   excluded_tables << 'ar_internal_metadata'
+  excluded_tables << 'active_storage_attachments'
+  excluded_tables << 'active_storage_blobs'
 
   ActiveRecord::Base.connection.data_sources.each do |table|
     next if excluded_tables.include? table
