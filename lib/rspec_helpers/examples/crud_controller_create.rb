@@ -30,7 +30,7 @@ RSpec.shared_examples 'CRUD Controller create' do
             js_res[:errors][column.to_sym]
           ).to include I18n.t('errors.messages.blank')
         else
-          raise 'unkown validator'
+          puts "unkown validator #{validator.class.name}"
         end
       end
     end
