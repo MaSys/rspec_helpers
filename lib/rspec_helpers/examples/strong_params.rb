@@ -7,7 +7,7 @@ RSpec.shared_examples 'strong params' do |relations, excluded|
   column_names = model.column_names.clone
   columns_to_delete = %w[id created_at updated_at deleted_at]
   columns_to_delete.each { |k| column_names.delete(k) }
-  devise_attrs.each { |k| column_names.delete(k) }
+  RspecHelpers.devise_attrs.each { |k| column_names.delete(k) }
   excluded.each { |k| column_names.delete(k) }
 
   RspecHelpers.attach_columns.each do |a|
