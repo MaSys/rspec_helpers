@@ -17,5 +17,7 @@ RSpec.shared_examples 'has_many relations' do |excluded_columns, excluded_tables
       next unless c == "#{model}_id"
       it { is_expected.to have_many(table.to_sym).inverse_of(model.to_sym) }
     end
+  rescue
+    next
   end
 end
