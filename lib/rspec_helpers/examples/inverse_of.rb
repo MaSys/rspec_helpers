@@ -1,5 +1,6 @@
 RSpec.shared_examples 'inverse of association' do |excluded|
   excluded = [excluded] unless excluded.is_a? Array
+  excluded.map! { |e| e.to_sym }
 
   described_class.reflect_on_all_associations(:belongs_to).each do |relation|
     next if excluded.include? relation.name
@@ -15,7 +16,7 @@ RSpec.shared_examples 'inverse of association' do |excluded|
   end
 
   described_class.reflect_on_all_associations(:has_many).each do |relation|
-    next if excluded.include? relation.name.to_s
+    next if excluded.include? relation.name
     next if relation.name == :versions
     next if relation.options[:polymorphic]
     next if relation.options[:as]
