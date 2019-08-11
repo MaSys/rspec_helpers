@@ -1,4 +1,5 @@
 RSpec.shared_examples 'inverse of association' do |excluded|
+  excluded = [] unless excluded
   excluded = [excluded] unless excluded.is_a? Array
   excluded.map! { |e| e.to_sym }
 
