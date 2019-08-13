@@ -7,38 +7,60 @@ RSpec.shared_examples 'CRUD Controller create' do
   validator = model.validators.first
 
   describe 'POST #create' do
-    it 'Should create resource' do
-      attrs = build(model_name).attributes
+    context 'with valid params' do
+      before do
+        attrs = build(model_name).attributes
+        post :create, params: { "#{model_name}" => attrs }
+      end
 
-      post :create, params: { "#{model_name}" => attrs }
-      res = js_res[:data]
-      columns.each do |c|
-        expect(res.key?(c.to_sym)).to be true
+      it 'Should create resource' do
+        res = js_res[:data]
+        columns.each do |c|
+          expect(res.key?(c.to_sym)).to be true
+        end
+      end
+
+      it 'returns meta' do
+        expect(js_res).to have_key :meta
+      end
+
+      it 'returns meta copyright' do
+        expect(js_res[:meta]).to have_key :copyright
+      end
+
+      it 'returns meta authors' do
+        expect(js_res[:meta]).to have_key :authors
+      end
+
+      it 'returns meta jsonapi' do
+        expect(js_res[:meta]).to have_key :jsonapi
       end
     end
 
     if validator
-      it 'Should return error' do
-        column = validator.attributes.first
-        attrs = build(model_name).attributes
-        attrs[column.to_s] = nil
+      context 'with invalid params' do
+        before do
+          @column = validator.attributes.first
+          attrs = build(model_name).attributes
+          attrs[@column.to_s] = nil
 
-        post :create, params: { "#{model_name}" => attrs}
+          post :create, params: { "#{model_name}" => attrs}
+        end
 
-        if validator.is_a? ActiveRecord::Validations::PresenceValidator
-          expect(
-            js_res[:errors][column.to_sym]
-          ).to include I18n.t('errors.messages.blank')
-        else
-          puts "unkown validator #{validator.class.name}"
+        it 'Should return error' do
+          if validator.is_a? ActiveRecord::Validations::PresenceValidator
+            expect(
+              js_res[:errors][@column.to_sym]
+            ).to include I18n.t('errors.messages.blank')
+          else
+            puts "unkown validator #{validator.class.name}"
+          end
+        end
+
+        it 'returns meta' do
+          expect(js_res).to have_key :meta
         end
       end
-    end
-
-    it 'returns meta' do
-      expect(js_res[:meta]).to have_key :copyright
-      expect(js_res[:meta]).to have_key :authors
-      expect(js_res[:meta]).to have_key :jsonapi
     end
   end
 end

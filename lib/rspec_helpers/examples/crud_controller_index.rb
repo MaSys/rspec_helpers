@@ -7,9 +7,12 @@ RSpec.shared_examples 'CRUD Controller index' do
   RspecHelpers.devise_attrs.each { |k| columns.delete(k) }
 
   describe 'GET #index' do
-    it 'Should return list' do
+    before do
       create model_name
       get :index
+    end
+
+    it 'Should return list' do
       expect(js_res[:data].count).to eq 1
       res = js_res[:data][0]
       columns.each do |c|
@@ -18,8 +21,18 @@ RSpec.shared_examples 'CRUD Controller index' do
     end
 
     it 'returns meta' do
+      expect(js_res).to have_key :meta
+    end
+
+    it 'returns meta copyright' do
       expect(js_res[:meta]).to have_key :copyright
+    end
+
+    it 'returns meta authors' do
       expect(js_res[:meta]).to have_key :authors
+    end
+
+    it 'returns meta jsonapi' do
       expect(js_res[:meta]).to have_key :jsonapi
     end
   end

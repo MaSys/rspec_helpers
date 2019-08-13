@@ -7,35 +7,59 @@ RSpec.shared_examples 'CRUD Controller update' do
   validator = model.validators.first
 
   describe 'PUT #update' do
-    it 'Should update resource' do
-      obj = create(model_name)
-      column = model.columns.select{|c| c.type === :string}[0]
-      put :update, params: { id: obj.id, "#{model_name}" => { "#{column.name}" => 1 } }
-      res = js_res[:data]
-      expect(res[column.name.to_sym].to_s).to eq 1.to_s
-    end
-
-    if validator
-      it 'Should return error' do
-        column = validator.attributes.first
+    context 'with valid params' do
+      before do
         obj = create(model_name)
+        @column = model.columns.select{|c| c.type === :string}[0]
+        put :update, params: { id: obj.id, "#{model_name}" => { "#{@column.name}" => 1 } }
+      end
 
-        put :update, params: { id: obj.id, "#{model_name}" => { "#{column}" => nil } }
+      it 'Should update resource' do
+        res = js_res[:data]
+        expect(res[@column.name.to_sym].to_s).to eq 1.to_s
+      end
 
-        if validator.is_a? ActiveRecord::Validations::PresenceValidator
-          expect(
-            js_res[:errors][column.to_sym]
-          ).to include I18n.t('errors.messages.blank')
-        else
-          puts "unkown validator #{validator.class.name}"
-        end
+      it 'returns meta' do
+        expect(js_res).to have_key :meta
+      end
+
+      it 'returns meta copyright' do
+        expect(js_res[:meta]).to have_key :copyright
+      end
+
+      it 'returns meta authors' do
+        expect(js_res[:meta]).to have_key :authors
+      end
+
+      it 'returns meta jsonapi' do
+        expect(js_res[:meta]).to have_key :jsonapi
       end
     end
 
-    it 'returns meta' do
-      expect(js_res[:meta]).to have_key :copyright
-      expect(js_res[:meta]).to have_key :authors
-      expect(js_res[:meta]).to have_key :jsonapi
+    if validator
+      context 'with invalid params' do
+        before do
+          @column = validator.attributes.first
+          obj = create(model_name)
+
+          put :update, params: { id: obj.id, "#{model_name}" => { "#{@column}" => nil } }
+        end
+
+        it 'Should return error' do
+
+          if validator.is_a? ActiveRecord::Validations::PresenceValidator
+            expect(
+              js_res[:errors][@column.to_sym]
+            ).to include I18n.t('errors.messages.blank')
+          else
+            puts "unkown validator #{validator.class.name}"
+          end
+        end
+
+        it 'returns meta' do
+          expect(js_res).to have_key :meta
+        end
+      end
     end
   end
 end

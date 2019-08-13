@@ -34,8 +34,18 @@ RSpec.shared_examples 'CRUD Controller destroy' do
     end
 
     it 'returns meta' do
+      expect(js_res).to have_key :meta
+    end
+
+    it 'returns meta copyright' do
       expect(js_res[:meta]).to have_key :copyright
+    end
+
+    it 'returns meta authors' do
       expect(js_res[:meta]).to have_key :authors
+    end
+
+    it 'returns meta jsonapi' do
       expect(js_res[:meta]).to have_key :jsonapi
     end
   end
