@@ -31,5 +31,11 @@ RSpec.shared_examples 'CRUD Controller update' do
         end
       end
     end
+
+    it 'returns meta' do
+      expect(js_res[:meta]).to have_key :copyright
+      expect(js_res[:meta]).to have_key :authors
+      expect(js_res[:meta]).to have_key :jsonapi
+    end
   end
 end

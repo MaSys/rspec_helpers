@@ -16,5 +16,11 @@ RSpec.shared_examples 'CRUD Controller index' do
         expect(res.key?(c.to_sym)).to be true
       end
     end
+
+    it 'returns meta' do
+      expect(js_res[:meta]).to have_key :copyright
+      expect(js_res[:meta]).to have_key :authors
+      expect(js_res[:meta]).to have_key :jsonapi
+    end
   end
 end
