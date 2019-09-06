@@ -7,13 +7,18 @@ RSpec.shared_examples 'CRUD Controller show' do
 
   describe 'GET #show' do
     before do
-      obj = create model_name
+      options = {}
+      options[:owner] = user if defined?(is_owner)
+      options[:user] = user if defined?(is_user)
+
+      obj = create model_name, options
       get :show, params: { id: obj.id }
     end
 
-    it 'Should return record' do
-      res = js_res[:data]
-      columns.each do |c|
+    columns.each do |c|
+      it "returns #{c} value" do
+        res = js_res[:data]
+        res = res[:attributes] if res.key?(:attributes)
         expect(res.key?(c.to_sym)).to be true
       end
     end

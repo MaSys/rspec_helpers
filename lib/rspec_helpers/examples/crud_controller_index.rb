@@ -8,14 +8,22 @@ RSpec.shared_examples 'CRUD Controller index' do
 
   describe 'GET #index' do
     before do
-      create model_name
+      options = {}
+      options[:owner] = user if defined?(is_owner)
+      options[:user] = user if defined?(is_user)
+
+      create model_name, options
       get :index
     end
 
-    it 'Should return list' do
+    it 'returns list' do
       expect(js_res[:data].count).to eq 1
-      res = js_res[:data][0]
-      columns.each do |c|
+    end
+
+    columns.each do |c|
+      it "returns #{c} value" do
+        res = js_res[:data][0]
+        res = res[:attributes] if res.key?(:attributes)
         expect(res.key?(c.to_sym)).to be true
       end
     end

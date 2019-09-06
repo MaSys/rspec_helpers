@@ -9,13 +9,18 @@ RSpec.shared_examples 'CRUD Controller update' do
   describe 'PUT #update' do
     context 'with valid params' do
       before do
-        obj = create(model_name)
+        options = {}
+        options[:owner] = user if defined?(is_owner)
+        options[:user] = user if defined?(is_user)
+
+        obj = create model_name, options
         @column = model.columns.select{|c| c.type === :string}[0]
         put :update, params: { id: obj.id, "#{model_name}" => { "#{@column.name}" => 1 } }
       end
 
       it 'Should update resource' do
         res = js_res[:data]
+        res = res[:attributes] if res.key?(:attributes)
         expect(res[@column.name.to_sym].to_s).to eq 1.to_s
       end
 
@@ -40,7 +45,11 @@ RSpec.shared_examples 'CRUD Controller update' do
       context 'with invalid params' do
         before do
           @column = validator.attributes.first
-          obj = create(model_name)
+          options = {}
+          options[:owner] = user if defined?(is_owner)
+          options[:user] = user if defined?(is_user)
+
+          obj = create model_name, options
 
           put :update, params: { id: obj.id, "#{model_name}" => { "#{@column}" => nil } }
         end

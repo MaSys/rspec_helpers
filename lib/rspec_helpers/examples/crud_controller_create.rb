@@ -13,9 +13,15 @@ RSpec.shared_examples 'CRUD Controller create' do
         post :create, params: { "#{model_name}" => attrs }
       end
 
-      it 'Should create resource' do
+      it 'creates resource' do
         res = js_res[:data]
-        columns.each do |c|
+        expect(res.key?(:id)).to be true
+      end
+
+      columns.each do |c|
+        it "returns #{c} value" do
+          res = js_res[:data]
+          res = res[:attributes] if res.key?(:attributes)
           expect(res.key?(c.to_sym)).to be true
         end
       end
