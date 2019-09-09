@@ -34,7 +34,14 @@ RSpec.shared_examples 'inverse of association' do |excluded|
         expect(rel).to_not be nil
 
       elsif relation.options[:through]
-        klass = relation.name.to_s.singularize.classify.constantize
+
+        source = relation.options[:source]
+        if source
+          klass = source.to_s.singularize.classify.constantize
+        else
+          klass = relation.name.to_s.singularize.classify.constantize
+        end
+
         rels = klass.reflect_on_all_associations(:has_many)
         rel = rels.detect do |r|
           r.name == relation.options[:inverse_of]
