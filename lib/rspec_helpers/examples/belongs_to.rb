@@ -7,7 +7,6 @@ RSpec.shared_examples 'belongs_to relations' do |excluded_columns|
     next if excluded_columns.include? c
     relation = c.gsub('_id', '')
     next if relation.ends_with?('able')
-    model = described_class.to_s.underscore.pluralize
-    it { is_expected.to belong_to(relation.to_sym).inverse_of(model.to_sym) }
+    it { is_expected.to belong_to(relation.to_sym) }
   end
 end
