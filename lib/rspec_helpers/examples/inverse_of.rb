@@ -41,6 +41,12 @@ RSpec.shared_examples 'inverse of association' do |excluded|
         rel = rels.detect do |r|
           r.name == relation.options[:inverse_of]
         end
+        if !rel
+          rels = klass.reflect_on_all_associations(:has_many)
+          rel = rels.detect do |r|
+            r.name == relation.options[:inverse_of]
+          end
+        end
         expect(rel).to_not be nil
 
       elsif relation.options[:through]
