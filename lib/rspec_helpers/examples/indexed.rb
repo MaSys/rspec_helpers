@@ -5,7 +5,10 @@ RSpec.shared_examples 'indexed' do |excluded_columns|
   relations = described_class.reflect_on_all_associations :belongs_to
   relations.each do |relation|
     relation_name = relation.name.to_s
-    column = relation_name + '_id'
+
+    foreign_key = relation.options[:foreign_key]
+    column = foreign_key || (relation_name + '_id')
+
     if relation.options[:polymorphic]
       it { is_expected.to have_db_index([:"#{relation_name}_type", column]) }
     else
