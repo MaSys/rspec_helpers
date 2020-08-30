@@ -12,9 +12,13 @@ module Request
   # Header Helpers
   module HeaderHelpers
     def authorization_header(token, email = nil)
+      request.headers['Authorization'] = authorization_token(token, email)
+    end
+
+    def authorization_token(token, email = nil)
       str = "Token token=#{token}"
       str += ";email=#{email}" if email
-      request.headers['Authorization'] = str
+      str
     end
   end
 end
