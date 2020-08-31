@@ -11,9 +11,8 @@ RSpec.shared_examples 'belongs_to relations' do |excluded_columns|
     rel = described_class.reflect_on_all_associations(:belongs_to).detect do |r|
       r.name == relation.to_sym
     end
-    optional = rel.options[:optional]
-    if optional
-      it { is_expected.to belong_to(relation.to_sym).optional(optional) }
+    if rel && rel.options[:optional]
+      it { is_expected.to belong_to(relation.to_sym).optional(rel.options[:optional]) }
     else
       it { is_expected.to belong_to(relation.to_sym) }
     end
