@@ -7,6 +7,15 @@ RSpec.shared_examples 'belongs_to relations' do |excluded_columns|
     next if excluded_columns.include? c
     relation = c.gsub('_id', '')
     next if relation.ends_with?('able')
-    it { is_expected.to belong_to(relation.to_sym) }
+
+    rel = described_class.reflect_on_all_associations(:belongs_to).detect do |r|
+      r.name == relation.to_sym
+    end
+    optional = rel.options[:optional]
+    if optional
+      it { is_expected.to belong_to(relation.to_sym).optional(optional) }
+    else
+      it { is_expected.to belong_to(relation.to_sym) }
+    end
   end
 end
