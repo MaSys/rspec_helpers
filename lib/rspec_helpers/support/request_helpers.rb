@@ -7,6 +7,22 @@ module Request
     rescue
       {}
     end
+
+    def data
+      js_res[:data]
+    end
+
+    def data_count
+      js_res[:data].count
+    end
+
+    def meta
+      js_res[:meta]
+    end
+
+    def pagination
+      meta[:pagination]
+    end
   end
 
   # Header Helpers
