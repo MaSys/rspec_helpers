@@ -53,7 +53,7 @@ RSpec.shared_examples 'strong params' do |relations, excluded|
     end
 
     column_names.each do |c|
-      it 'Should permit ' + c do
+      it 'permits ' + c do
         if c.end_with? '_file_name'
           cn = c.gsub('_file_name', '')
           expect(@permitted.key?(cn)).to be true
@@ -75,14 +75,14 @@ RSpec.shared_examples 'strong params' do |relations, excluded|
           r_columns << 'id'
           r_columns << '_destroy'
           r_columns.each do |cn|
-            it 'Should permit ' + cn do
+            it 'permits ' + cn do
               expect(@permitted[r.to_sym][cn]).to_not be_nil
             end
           end
 
         elsif r.end_with? '_ids'
 
-          it 'Should permit ' + r do
+          it 'permits ' + r do
             expect(@permitted[r.to_sym].count).to eq 1
           end
 
