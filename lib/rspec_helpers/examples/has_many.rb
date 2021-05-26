@@ -1,11 +1,14 @@
 RSpec.shared_examples 'has_many relations' do |excluded_columns, excluded_tables|
   # has_many relation.
-  excluded_columns = [excluded_columns.map(&:to_s)] unless excluded_columns.is_a? Array
-  excluded_tables = [excluded_tables.map(&:to_s)] unless excluded_tables.is_a? Array
+  excluded_columns = [excluded_columns] unless excluded_columns.is_a? Array
+  excluded_tables = [excluded_tables] unless excluded_tables.is_a? Array
   excluded_tables << 'schema_migrations'
   excluded_tables << 'ar_internal_metadata'
   excluded_tables << 'active_storage_attachments'
   excluded_tables << 'active_storage_blobs'
+
+  excluded_columns.map!(&:to_s)
+  excluded_tables.map!(&:to_s)
 
   ActiveRecord::Base.connection.data_sources.each do |table|
     next if excluded_tables.include? table

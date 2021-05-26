@@ -1,6 +1,7 @@
 RSpec.shared_examples 'indexed' do |excluded_columns|
   # Indexes
-  excluded_columns = [excluded_columns.map(&:to_s)] unless excluded_columns.is_a? Array
+  excluded_columns = [excluded_columns] unless excluded_columns.is_a? Array
+  excluded_columns.map!(&:to_s)
 
   relations = described_class.reflect_on_all_associations :belongs_to
   relations.each do |relation|
