@@ -13,7 +13,7 @@ RSpec.shared_examples 'inverse of association' do |excluded|
 
       class_name = relation.options[:class_name]
       if class_name
-        klass = class_name.singularize.classify.constantize
+        klass = class_name.to_s.singularize.classify.constantize
         rel = klass.reflect_on_all_associations(:has_many).detect do |r|
           r.name == relation.options[:inverse_of]
         end
